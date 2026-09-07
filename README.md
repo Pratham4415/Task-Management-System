@@ -1,19 +1,24 @@
 # TaskFlow — MERN Task Management System
 
-A full-stack Task Manager built with MongoDB, Express.js, React.js, and Node.js. Users can register, log in, and manage personal tasks with full CRUD operations. Tasks are scoped per user with JWT-based authentication stored in localStorage. Includes an admin panel for user and task management.
+A full-stack Task Manager built with MongoDB, Express.js, React.js, and Node.js with strict role-based access control.
+
+### Roles & Permissions
+- **Admin**: The system has **1 admin user** (`admin@taskflow.com`). Only the admin has the permission to **create, edit, and delete new users**. The admin cannot create tasks for themselves, but they can view all tasks across the entire system and filter them by user or status.
+- **Users**: Users **cannot self-register**; they must be created by the admin. Once created, users can log in to view a personalized dashboard. Users have full permission to **create, read, update, and delete their own tasks**. Users cannot see or modify tasks belonging to other users.
 
 ## Features
 
-- User registration and login with bcrypt password hashing
-- JWT authentication stored in localStorage (read on app initialization)
-- Protected routes using PrivateRoute component (redirects to /login)
-- Task CRUD — create, read, update, delete (user-scoped)
-- Filter tasks by status (All / Pending / In-Progress / Done)
-- Rate limiting on auth and API routes
-- Helmet security headers
-- Input validation (express-validator + client-side)
-- Responsive dark-themed UI
-- **Admin Panel** — manage users (CRUD) and view all tasks with filters
+- **Role-Based Access**: Strict separation between admin management and user task creation.
+- JWT authentication stored in localStorage (read on app initialization, 1-hour expiry).
+- Protected routes using PrivateRoute component (redirects to /login).
+- Task CRUD — create, read, update, delete (strictly user-scoped).
+- Past date validation — due dates cannot be set in the past.
+- Filter tasks by status (All / Pending / In-Progress / Done).
+- Rate limiting on auth and API routes.
+- Helmet security headers and CORS protection.
+- Input validation (express-validator + client-side).
+- Responsive dark-themed UI.
+- **Admin Panel** — manage users (CRUD) and view all system tasks with filters.
 
 ## Admin Login
 

@@ -27,10 +27,13 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task, loading }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const today = new Date().toISOString().split('T')[0];
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim()) return setError('Title is required');
     if (!form.dueDate) return setError('Due date is required');
+    if (form.dueDate < today) return setError('Due date cannot be in the past');
     setError('');
     onSubmit(form);
   };
@@ -65,7 +68,7 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task, loading }) => {
             </div>
             <div className="form-group">
               <label htmlFor="dueDate">Due Date</label>
-              <input id="dueDate" name="dueDate" type="date" value={form.dueDate} onChange={handleChange} />
+              <input id="dueDate" name="dueDate" type="date" value={form.dueDate} onChange={handleChange} min={today} />
             </div>
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>

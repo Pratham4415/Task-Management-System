@@ -15,14 +15,24 @@ const taskValidator = [
   body('title').trim().notEmpty().withMessage('Title is required').isLength({ max: 100 }),
   body('description').optional().trim().isLength({ max: 500 }),
   body('status').optional().isIn(['pending', 'in-progress', 'done']).withMessage('Invalid status'),
-  body('dueDate').notEmpty().withMessage('Due date is required').isISO8601().withMessage('Invalid date format')
+  body('dueDate').notEmpty().withMessage('Due date is required').isISO8601().withMessage('Invalid date format').custom((value) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (new Date(value) < today) throw new Error('Due date cannot be in the past');
+    return true;
+  })
 ];
 
 const taskUpdateValidator = [
   body('title').optional().trim().notEmpty().withMessage('Title cannot be empty').isLength({ max: 100 }),
   body('description').optional().trim().isLength({ max: 500 }),
   body('status').optional().isIn(['pending', 'in-progress', 'done']).withMessage('Invalid status'),
-  body('dueDate').optional().isISO8601().withMessage('Invalid date format')
+  body('dueDate').optional().isISO8601().withMessage('Invalid date format').custom((value) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (new Date(value) < today) throw new Error('Due date cannot be in the past');
+    return true;
+  })
 ];
 
 module.exports = { registerValidator, loginValidator, taskValidator, taskUpdateValidator };

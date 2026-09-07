@@ -15,12 +15,8 @@ connectDB();
 const app = express();
 
 app.use(helmet());
-const clientUrl = process.env.CLIENT_URL 
-  ? process.env.CLIENT_URL.replace(/\/$/, '') 
-  : 'http://localhost:5173';
-
 app.use(cors({
-  origin: [clientUrl, 'http://localhost:5173'], // Allow both local and deployed
+  origin: true, // Dynamically allows any origin, fixing credentials: true requirement
   credentials: true
 }));
 app.use(express.json({ limit: '10kb' }));

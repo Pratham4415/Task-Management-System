@@ -27,14 +27,14 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', data.token);
-    setUser({ _id: data._id, name: data.name, email: data.email });
+    setUser({ _id: data._id, name: data.name, email: data.email, role: data.role });
     return data;
   };
 
   const register = async (name, email, password) => {
     const { data } = await api.post('/auth/register', { name, email, password });
     localStorage.setItem('token', data.token);
-    setUser({ _id: data._id, name: data.name, email: data.email });
+    setUser({ _id: data._id, name: data.name, email: data.email, role: data.role });
     return data;
   };
 
@@ -43,8 +43,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const isAdmin = user?.role === 'admin';
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

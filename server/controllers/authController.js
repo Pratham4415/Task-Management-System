@@ -23,6 +23,7 @@ const register = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token
     });
   } catch (error) {
@@ -50,6 +51,7 @@ const login = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token
     });
   } catch (error) {
@@ -62,7 +64,8 @@ const getMe = async (req, res) => {
     res.json({
       _id: req.user._id,
       name: req.user.name,
-      email: req.user.email
+      email: req.user.email,
+      role: req.user.role
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

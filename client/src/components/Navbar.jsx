@@ -1,12 +1,13 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     navigate('/login');
   };
 
@@ -20,7 +21,17 @@ const Navbar = () => {
       </Link>
       {user && (
         <div className="navbar-right">
-          <span className="navbar-user">{user.name}</span>
+          {isAdmin && (
+            <div className="navbar-links">
+              <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>My Tasks</Link>
+              <Link to="/admin/users" className={`nav-link ${location.pathname.startsWith('/admin/users') ? 'active' : ''}`}>Users</Link>
+              <Link to="/admin/tasks" className={`nav-link ${location.pathname === '/admin/tasks' ? 'active' : ''}`}>All Tasks</Link>
+            </div>
+          )}
+          <span className="navbar-user">
+            {user.name}
+            {isAdmin && <span className="admin-badge">Admin</span>}
+          </span>
           <button onClick={handleLogout} className="btn btn-ghost">Logout</button>
         </div>
       )}

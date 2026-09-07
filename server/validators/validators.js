@@ -16,9 +16,12 @@ const taskValidator = [
   body('description').optional().trim().isLength({ max: 500 }),
   body('status').optional().isIn(['pending', 'in-progress', 'done']).withMessage('Invalid status'),
   body('dueDate').notEmpty().withMessage('Due date is required').isISO8601().withMessage('Invalid date format').custom((value) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (new Date(value) < today) throw new Error('Due date cannot be in the past');
+    // Compare YYYY-MM-DD strings to avoid timezone shift issues
+    const inputDate = value.split('T')[0];
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    const localToday = new Date(Date.now() - tzoffset).toISOString().split('T')[0];
+    
+    if (inputDate < localToday) throw new Error('Due date cannot be in the past');
     return true;
   })
 ];
@@ -28,9 +31,11 @@ const taskUpdateValidator = [
   body('description').optional().trim().isLength({ max: 500 }),
   body('status').optional().isIn(['pending', 'in-progress', 'done']).withMessage('Invalid status'),
   body('dueDate').optional().isISO8601().withMessage('Invalid date format').custom((value) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (new Date(value) < today) throw new Error('Due date cannot be in the past');
+    const inputDate = value.split('T')[0];
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    const localToday = new Date(Date.now() - tzoffset).toISOString().split('T')[0];
+    
+    if (inputDate < localToday) throw new Error('Due date cannot be in the past');
     return true;
   })
 ];

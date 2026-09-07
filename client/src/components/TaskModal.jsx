@@ -27,7 +27,11 @@ const TaskModal = ({ isOpen, onClose, onSubmit, task, loading }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const today = new Date().toISOString().split('T')[0];
+  const getLocalToday = () => {
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
+    return new Date(Date.now() - tzoffset).toISOString().split('T')[0];
+  };
+  const today = getLocalToday();
 
   const handleSubmit = (e) => {
     e.preventDefault();

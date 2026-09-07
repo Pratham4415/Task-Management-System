@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 
 const UserModal = ({ isOpen, onClose, onSubmit, user, loading }) => {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'user' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (user) {
-      setForm({ name: user.name, email: user.email, password: '', role: user.role });
+      setForm({ name: user.name, email: user.email, password: '' });
     } else {
-      setForm({ name: '', email: '', password: '', role: 'user' });
+      setForm({ name: '', email: '', password: '' });
     }
     setError('');
   }, [user, isOpen]);
@@ -23,7 +23,7 @@ const UserModal = ({ isOpen, onClose, onSubmit, user, loading }) => {
     if (!user && form.password.length < 6) return setError('Password must be at least 6 characters');
     setError('');
 
-    const payload = { name: form.name, email: form.email, role: form.role };
+    const payload = { name: form.name, email: form.email };
     if (!user) payload.password = form.password;
     onSubmit(payload);
   };
@@ -53,13 +53,6 @@ const UserModal = ({ isOpen, onClose, onSubmit, user, loading }) => {
               <input id="password" name="password" type="password" value={form.password} onChange={handleChange} placeholder="Min. 6 characters" />
             </div>
           )}
-          <div className="form-group">
-            <label htmlFor="role">Role</label>
-            <select id="role" name="role" value={form.role} onChange={handleChange}>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
             {loading ? 'Saving...' : (user ? 'Update User' : 'Create User')}
           </button>

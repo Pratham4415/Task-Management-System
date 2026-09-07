@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -36,23 +36,21 @@ const Login = () => {
           <h1>Welcome back</h1>
           <p>Sign in to your TaskFlow account</p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           {error && <div className="form-error">{error}</div>}
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
+            <input id="email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" autoComplete="new-password" />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" value={form.password} onChange={handleChange} placeholder="••••••••" />
+            <input id="password" name="password" type="password" value={form.password} onChange={handleChange} placeholder="••••••••" autoComplete="new-password" />
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-        <p className="auth-footer">
-          Don't have an account? <Link to="/register">Create one</Link>
-        </p>
+
       </div>
     </div>
   );

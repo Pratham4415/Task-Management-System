@@ -6,24 +6,17 @@ const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('token');
     if (token) {
       api.get('/auth/me')
-        .then(({ data }) => {
-          setUser(data);
-          localStorage.setItem('user', JSON.stringify(data));
-        })
+        .then(({ data }) => setUser(data))
         .catch(() => {
+          localStorage.removeItem('token');
           setUser(null);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('user');
         })
         .finally(() => setLoading(false));
     } else {
@@ -33,26 +26,20 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('accessToken', data.accessToken);
-    const userData = { _id: data._id, name: data.name, email: data.email };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem('token', data.token);
+    setUser({ _id: data._id, name: data.name, email: data.email });
     return data;
   };
 
   const register = async (name, email, password) => {
     const { data } = await api.post('/auth/register', { name, email, password });
-    localStorage.setItem('accessToken', data.accessToken);
-    const userData = { _id: data._id, name: data.name, email: data.email };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    localStorage.setItem('token', data.token);
+    setUser({ _id: data._id, name: data.name, email: data.email });
     return data;
   };
 
-  const logout = async () => {
-    try { await api.post('/auth/logout'); } catch {}
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+  const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
   };
 

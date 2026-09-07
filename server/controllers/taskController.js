@@ -17,6 +17,10 @@ const createTask = async (req, res) => {
       return res.status(400).json({ message: errors.array()[0].msg });
     }
 
+    if (req.user.role === 'admin') {
+      return res.status(403).json({ message: 'Admins cannot create tasks' });
+    }
+
     const { title, description, status, dueDate } = req.body;
     const task = await Task.create({
       title,

@@ -8,7 +8,10 @@ const PrivateRoute = ({ children }) => {
     return <div className="loader-container"><div className="loader"></div></div>;
   }
 
-  return user ? children : <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role === 'admin') return <Navigate to="/admin/users" replace />;
+
+  return children;
 };
 
 export default PrivateRoute;
